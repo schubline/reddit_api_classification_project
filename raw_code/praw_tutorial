@@ -1,0 +1,19 @@
+import praw
+
+reddit = praw.Reddit(client_id = 'mOyVhJLCde_uVA',
+client_secret = 'HpvnvYh4MDb3NgJEO2v0hiWNBJU',
+username = praw_tutorial,
+password = 'cookies',
+user_agent = 'prawtutorial1v1')
+
+subreddit = reddit.subreddit('python')
+
+hot_python = subreddit.hot(limit=1) #will just return the hottest python post
+
+for submission in hot_python:
+    print(submission) 
+# hot is a combination of votes to time
+# new: just based on time
+# rising is stuff that is moving up quite quickly
+# controversial: anything with a combination of upvotes and downvotes
+# Top

@@ -1,0 +1,50 @@
+import requests
+import time
+import pandas as pd
+
+url = 'https://www.reddit.com/hot.json'
+
+headers = {'User-agent': 'Bleep blorp bot 0.1'}
+
+res = requests.get(url, headers=headers)
+
+res.status_code
+
+the_json = res.json()
+
+sorted(the_json.keys())
+
+sorted(the_json['data'].keys())
+
+sorted(the_json['data'].keys())
+
+len(the_json['data']['children'])
+
+the_json['data']['after']
+
+[post['data']['name'] for post in  the_json['data']['children']]
+
+param = {'after': 't3_8m1gat'}
+
+requests.get(url, params=param, headers=headers)
+
+posts = []
+after = None
+for i in range(4):
+    print(i)
+    if after == None:
+        params = {}
+    else:
+        params = {'after': after}
+    url = 'https://www.reddit.com/hot.json'
+    res = requests.get(url, params=params, headers=headers)
+    if res.status_code == 200:
+        the_json = res.json()
+        posts.extend(the_json['data']['children'])
+        after = the_json['data']['after']
+    else:
+        print(res.status_code)
+        break
+    time.sleep(1)
+
+len(set([p['data']['name'] for p in posts]))

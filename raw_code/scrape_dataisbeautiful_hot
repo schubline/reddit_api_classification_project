@@ -1,0 +1,84 @@
+# Scrape of r/dataisbeautiful
+import praw
+import pandas as pd
+from datetime import timedelta
+import datetime as dt
+
+reddit = praw.Reddit(client_id = 'c0wH43lHUelWRw',
+client_secret = 'd5hKuxZDOea24gEPLGUMB1xl-mU',
+username = 'ShoddyRevenue',
+password = 'AppleBird167', user_agent ='prawtutorialv2')
+
+# Creating Popular subreddit dataset
+subreddit = reddit.subreddit('dataisbeautiful')
+
+top_subreddit = subreddit.hot(limit=10000)
+
+# for submission in subreddit.hot(limit=1):
+#     print(submission.title, submission.id)
+
+
+topics_dict = { "title":[], \
+                "subreddit":[], \
+                "is_video":[], \
+                "subreddit_subs":[], \
+                "thumbnail":[], \
+                "score":[], \
+                "id":[], "url":[], \
+                "comms_num": [], \
+                "num_crossposts": [], \
+                "created": [], \
+                "whitelist_status": [], \
+                "thumbnail_ht": [], \
+                "thumbnail_wdt": [], \
+                "ops_flair": [], \
+                "link_flair": [], \
+                "body":[]}
+
+for submission in top_subreddit:
+    #ignoring posts that are sticked or pinned
+    if not submission.stickied or not submission.pinned:
+        topics_dict["title"].append(submission.title)
+        topics_dict["subreddit"].append(submission.subreddit)
+        topics_dict["subreddit_subs"].append(submission.subreddit_subscribers)
+        topics_dict["thumbnail"].append(submission.thumbnail)
+        topics_dict["thumbnail_ht"].append(submission.thumbnail_height)
+        topics_dict["thumbnail_wdt"].append(submission.thumbnail_width)
+        topics_dict["is_video"].append(submission.is_video)
+        topics_dict["score"].append(submission.score)
+        topics_dict["id"].append(submission.id)
+        topics_dict["url"].append(submission.url)
+        topics_dict["comms_num"].append(submission.num_comments)
+        topics_dict["num_crossposts"].append(submission.num_crossposts)
+        topics_dict["created"].append(submission.created)
+        topics_dict["whitelist_status"].append(submission.whitelist_status)
+        topics_dict["ops_flair"].append(submission.selftext)
+        topics_dict["link_flair"].append(submission.selftext)
+        topics_dict["body"].append(submission.selftext)
+
+
+topics_data = pd.DataFrame(topics_dict)
+
+# topics_data.head()
+
+def get_date(created):
+    return dt.datetime.fromtimestamp(created)
+
+_timestamp = topics_data["created"].apply(get_date)
+
+topics_data = topics_data.assign(timestamp = _timestamp)
+
+topics_data["time_up"] = dt.datetime.now() - topics_data["timestamp"]
+
+topics_data["thumbnail_size"] = topics_data["thumbnail_ht"] * topics_data["thumbnail_wdt"]
+
+topics_data.drop(["thumbnail_ht", "thumbnail_wdt"], axis=1, inplace=True)
+
+topics_data.shape
+
+
+topics_data.head()
+
+
+
+# topics_data.to_csv('.csv', index=False)

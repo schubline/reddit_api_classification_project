@@ -1,0 +1,37 @@
+import praw
+
+# 30 api calls per minute, funcs  count as a call
+
+reddit = praw.Reddit(client_id = 'c0wH43lHUelWRw',
+client_secret = 'd5hKuxZDOea24gEPLGUMB1xl-mU',
+username = 'ShoddyRevenue',
+password = 'AppleBird167', user_agent ='prawtutorialv2')
+
+subreddit = reddit.subreddit('politics')
+
+for comment in subreddit.stream.comments():
+    try:
+        print(comment.body)
+        # parent_id = str(comment.parent())
+        # original = reddit.comment(parent_id)
+        # print('Parent: ')
+        # print(original.body)
+        # print('Reply: ')
+        # print(comment.body)
+
+    except praw.exceptions.PRAWException as e:
+        pass
+
+for submission in subreddit.stream.submissions():
+    try:
+        print(submission.title)
+        # parent_id = str(comment.parent())
+        # original = reddit.comment(parent_id)
+        # print('Parent: ')
+        # print(original.body)
+        # print('Reply: ')
+        # print(comment.body)
+
+    except praw.exceptions.PRAWException as e:
+        print(str(e))
+        # pass

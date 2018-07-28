@@ -1,0 +1,37 @@
+import praw
+
+reddit = praw.Reddit(client_id = 'c0wH43lHUelWRw',
+client_secret = 'd5hKuxZDOea24gEPLGUMB1xl-mU',
+username = 'ShoddyRevenue',
+password = 'AppleBird167', user_agent ='prawtutorialv2')
+
+subreddit = reddit.subreddit('popular')
+
+hot_p = subreddit.hot(limit=10)
+
+# for submission in hot_python:
+#     # ignoring posts that are stickied
+#     if not submission.stickied:
+#         print(submission.title)
+
+#dir(submission)
+
+
+for submission in hot_python:
+    # ignoring posts that are stickied
+    if not submission.stickied:
+        print('Title: {}, upvotes: {}, downvotes: {}, media: {}'.format(
+        submission.title,
+        submission.ups,
+        submission.downs,
+        submission.media
+        ))
+
+# Parsing comments
+# Comments aren't in pure chrono order, tree of comments
+
+comments = submission.comments
+
+for comment in comments:
+    print(20*'-')
+    print(comment.body)
